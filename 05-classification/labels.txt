@@ -1,0 +1,9 @@
+blue_circle
+blue_rect
+blue_tri
+red_circle
+red_rect
+red_tri
+yellow_circle
+yellow_rect
+yellow_tri

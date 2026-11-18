@@ -1,0 +1,42 @@
+目录结构：
+- mculib：需要放在k230的 sdcard/ 目录下，是k230端代码所用库。
+	- cl.py：连接pc所用库，有自发现的实现，但没启用。
+	- g1lib.py：主要的视频编码和发送库。
+	- vofa_lite.py：轻量的vofa解码，为pc->k230的通信协议。
+- pc：上位机代码。
+	- config.py：PC端配置文件（端口、滑条、窗口等）。
+	- toolx2.py：上位机主程序，上位机界面也在这里配置。把这篇喂给ai就能让其生成定制款上位机。
+	- lib：上位机用到的库
+		- h265.py：解码器
+		- justfloat.py：vofa编码
+		- receiver.py：主要逻辑
+- config.py：K230端网络配置文件（IP、端口、WiFi等），使用前必须修改。
+- g1.py：k230主程序。
+
+===== 本机化适配说明 =====
+
+【运行顺序】先运行pc代码，再运行k230代码。
+
+【第一步：PC端 IP 确认】
+  在运行 PC 的电脑上，打开命令行执行 ipconfig，查看本机 IP 地址。
+
+【第二步：修改 K230 端配置】
+  编辑项目根目录下的 config.py：
+  1. PC_IP —— 改为你 PC 的实际 IP 地址
+  2. USE_WLAN —— 选择网络模式（False=有线LAN, True=WiFi）
+  3. 如果使用 LAN：修改 K230_IP / K230_MASK / K230_GATEWAY
+  4. 如果使用 WiFi：修改 WIFI_SSID / WIFI_PASSWORD
+  5. TCP_PORT —— 需与 pc/config.py 中的 SERVER_PORT 保持一致（默认6001）
+
+【第三步：PC 端配置（可选）】
+  编辑 pc/config.py 可修改：
+  - SERVER_PORT：TCP 监听端口（需与 K230 端一致）
+  - SLIDER_COUNT：滑条数量
+  - 窗口尺寸、二值化参数等
+
+【第四步：部署运行】
+  1. 将 config.py、g1.py、mculib/ 复制到 K230 的 sdcard/
+  2. 在 PC 端运行：python pc/toolx2.py
+  3. 在 K230 端运行 g1.py
+
+pc和k230的关键数据回调都在主程序内定义，喂给ai修改即可。
